@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Ranade:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar for chat */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Smooth animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Message bubble animations */
+.message-bubble {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Typing indicator pulse */
+@keyframes typingPulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.typing-pulse {
+    animation: typingPulse 1.4s ease-in-out infinite;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .sidebar-mobile {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+    }
+
+    .chat-interface-mobile {
+        height: 60vh;
+    }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    .dark-mode-toggle {
+        display: block;
+    }
+}
+
+/* Ranade Font Classes */
+.font-ranade {
+    font-family: 'Ranade', sans-serif;
+}
+
+.font-ranade-light {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 300;
+}
+
+.font-ranade-regular {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 400;
+}
+
+.font-ranade-medium {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 500;
+}
+
+.font-ranade-semibold {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 600;
+}
+
+.font-ranade-bold {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 700;
+}
+
+.font-ranade-extrabold {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 800;
+}
+
+.font-ranade-black {
+    font-family: 'Ranade', sans-serif;
+    font-weight: 900;
+}
+
+/* Focus states for accessibility */
+.focus-visible:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Loading states */
+.loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}

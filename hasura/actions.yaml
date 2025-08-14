@@ -1,0 +1,125 @@
+# Hasura Actions Configuration
+# This file defines the sendMessage action for the chatbot
+
+version: 3
+actions:
+  - name: sendMessage
+    definition:
+      kind: synchronous
+      handler: "https://n8n-ai-chatbot-d6di.onrender.com:5678/webhook/send-message"
+      forward_client_headers: true
+      headers:
+        - name: "x-hasura-admin-secret"
+          value: "i0M9+^-&_+6hq,Tb7+':#f,-zb#'tbMb"
+        - name: "Content-Type"
+          value: "application/json"
+    permissions:
+      - role: user
+    type:
+      input:
+        arguments:
+          - name: chat_id
+            type: uuid!
+          - name: content
+            type: String!
+      output:
+        type: SendMessageResponse
+
+# Custom types for the action
+custom_types:
+  input_objects: []
+  objects:
+    - name: SendMessageResponse
+      fields:
+        - name: success
+          type: Boolean!
+        - name: message
+          type: String
+        - name: error
+          type: String
+  scalars: []
+  enums: []
+
+# Metadata for the action
+metadata:
+  version: 3
+  sources:
+    - name: default
+      kind: postgres
+      tables:
+        - table:
+            schema: public
+            name: chats
+          array_relationships: []
+          object_relationships: []
+          select_permissions:
+            - role: user
+              permission:
+                columns: []
+                filter:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          insert_permissions:
+            - role: user
+              permission:
+                check:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+                columns: []
+          update_permissions:
+            - role: user
+              permission:
+                columns: []
+                filter:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          delete_permissions:
+            - role: user
+              permission:
+                filter:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+        - table:
+            schema: public
+            name: messages
+          array_relationships: []
+          object_relationships: []
+          select_permissions:
+            - role: user
+              permission:
+                columns: []
+                filter:
+                  chat_id:
+                    _in:
+                      _table:
+                        schema: public
+                        name: chats
+                      _where:
+                        user_id:
+                          _eq: X-Hasura-User-Id
+          insert_permissions:
+            - role: user
+              permission:
+                check:
+                  chat_id:
+                    _in:
+                      _table:
+                        schema: public
+                        name: chats
+                      _where:
+                        user_id:
+                          _eq: X-Hasura-User-Id
+                columns: []
+          update_permissions:
+            - role: user
+              permission:
+                columns: []
+                filter:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          delete_permissions:
+            - role: user
+              permission:
+                filter:
+                  user_id:
+                    _eq: X-Hasura-User-Id
