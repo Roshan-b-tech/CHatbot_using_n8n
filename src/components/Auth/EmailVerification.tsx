@@ -22,7 +22,12 @@ export function EmailVerification() {
     useEffect(() => {
         // If user is already authenticated, redirect to dashboard
         if (isAuthenticated) {
-            navigate('/dashboard');
+            // Use environment variable for proper redirect
+            const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+            const dashboardUrl = `${baseUrl}/dashboard`;
+            console.log('Redirecting to dashboard:', dashboardUrl);
+            // Use absolute URL to prevent localhost redirects
+            window.location.href = dashboardUrl;
             return;
         }
 
@@ -65,7 +70,12 @@ export function EmailVerification() {
                     setVerificationStatus('success');
                     // Wait a moment then redirect to dashboard
                     setTimeout(() => {
-                        navigate('/dashboard');
+                        // Use environment variable for proper redirect
+                        const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+                        const dashboardUrl = `${baseUrl}/dashboard`;
+                        console.log('Success redirect to dashboard:', dashboardUrl);
+                        // Use absolute URL to prevent localhost redirects
+                        window.location.href = dashboardUrl;
                     }, 2000);
                 } else {
                     // If still not authenticated, the token might be invalid
@@ -150,7 +160,10 @@ export function EmailVerification() {
                         <p className="text-gray-600 mb-6">{errorMessage}</p>
                         <div className="space-y-3">
                             <button
-                                onClick={() => navigate('/auth')}
+                                onClick={() => {
+                                    const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+                                    window.location.href = `${baseUrl}/auth`;
+                                }}
                                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                             >
                                 Back to Sign In
@@ -176,7 +189,10 @@ export function EmailVerification() {
                         <p className="text-gray-600 mb-6">{errorMessage}</p>
                         <div className="space-y-3">
                             <button
-                                onClick={() => navigate('/auth')}
+                                onClick={() => {
+                                    const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+                                    window.location.href = `${baseUrl}/auth`;
+                                }}
                                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                             >
                                 Back to Sign In
