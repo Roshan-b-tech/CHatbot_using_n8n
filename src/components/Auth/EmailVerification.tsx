@@ -20,40 +20,14 @@ export function EmailVerification() {
     const type = searchParams.get('type');
 
     useEffect(() => {
-        // Debug: Log environment variables and current state
-        console.log('🔍 EmailVerification Debug Info:');
-        console.log('VITE_APP_URL:', import.meta.env.VITE_APP_URL);
-        console.log('VITE_VERIFICATION_REDIRECT_URL:', import.meta.env.VITE_VERIFICATION_REDIRECT_URL);
-        console.log('Current location:', window.location.href);
-        console.log('Current origin:', window.location.origin);
-        console.log('Is authenticated:', isAuthenticated);
-        console.log('Token:', token);
-        console.log('Type:', type);
-
-        // Check if we're on localhost (this shouldn't happen in production)
-        if (window.location.origin.includes('localhost')) {
-            console.error('🚨 ERROR: App is running on localhost in production!');
-            console.error('This means Nhost or something else is redirecting to localhost');
-            console.error('Expected origin:', import.meta.env.VITE_APP_URL);
-            console.error('Actual origin:', window.location.origin);
-        }
-
         // If user is already authenticated, redirect to dashboard
         if (isAuthenticated) {
             // Use environment variable for proper redirect
             const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
             const dashboardUrl = `${baseUrl}/dashboard`;
-            console.log('🚀 Redirecting to dashboard:', dashboardUrl);
-            console.log('Base URL source:', import.meta.env.VITE_APP_URL ? 'Environment variable' : 'Fallback to origin');
-
-            // Force redirect to production URL if we're on localhost
-            if (window.location.origin.includes('localhost') && import.meta.env.VITE_APP_URL) {
-                console.log('🔄 Force redirect to production URL');
-                window.location.href = dashboardUrl;
-            } else {
-                // Use absolute URL to prevent localhost redirects
-                window.location.href = dashboardUrl;
-            }
+            console.log('Redirecting to dashboard:', dashboardUrl);
+            // Use absolute URL to prevent localhost redirects
+            window.location.href = dashboardUrl;
             return;
         }
 
@@ -99,8 +73,7 @@ export function EmailVerification() {
                         // Use environment variable for proper redirect
                         const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
                         const dashboardUrl = `${baseUrl}/dashboard`;
-                        console.log('🎉 Success redirect to dashboard:', dashboardUrl);
-                        console.log('Base URL source:', import.meta.env.VITE_APP_URL ? 'Environment variable' : 'Fallback to origin');
+                        console.log('Success redirect to dashboard:', dashboardUrl);
                         // Use absolute URL to prevent localhost redirects
                         window.location.href = dashboardUrl;
                     }, 2000);
