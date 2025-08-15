@@ -22,11 +22,9 @@ export function EmailVerification() {
     useEffect(() => {
         // If user is already authenticated, redirect to dashboard
         if (isAuthenticated) {
-            // Use environment variable for proper redirect
-            const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-            const dashboardUrl = `${baseUrl}/dashboard`;
+            // Force Netlify URL - no environment variables needed
+            const dashboardUrl = 'https://chatbotwithn8n.netlify.app/dashboard';
             console.log('Redirecting to dashboard:', dashboardUrl);
-            // Use absolute URL to prevent localhost redirects
             window.location.href = dashboardUrl;
             return;
         }
@@ -70,11 +68,9 @@ export function EmailVerification() {
                     setVerificationStatus('success');
                     // Wait a moment then redirect to dashboard
                     setTimeout(() => {
-                        // Use environment variable for proper redirect
-                        const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-                        const dashboardUrl = `${baseUrl}/dashboard`;
+                        // Force Netlify URL - no environment variables needed
+                        const dashboardUrl = 'https://chatbotwithn8n.netlify.app/dashboard';
                         console.log('Success redirect to dashboard:', dashboardUrl);
-                        // Use absolute URL to prevent localhost redirects
                         window.location.href = dashboardUrl;
                     }, 2000);
                 } else {
@@ -161,8 +157,8 @@ export function EmailVerification() {
                         <div className="space-y-3">
                             <button
                                 onClick={() => {
-                                    const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-                                    window.location.href = `${baseUrl}/auth`;
+                                    // Force Netlify URL - no environment variables needed
+                                    window.location.href = 'https://chatbotwithn8n.netlify.app/auth';
                                 }}
                                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                             >
@@ -190,8 +186,8 @@ export function EmailVerification() {
                         <div className="space-y-3">
                             <button
                                 onClick={() => {
-                                    const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-                                    window.location.href = `${baseUrl}/auth`;
+                                    // Force Netlify URL - no environment variables needed
+                                    window.location.href = 'https://chatbotwithn8n.netlify.app/auth';
                                 }}
                                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
                             >
