@@ -3,6 +3,8 @@ import { useSignUpEmailPassword, useSignInEmailPassword, useAuthenticationStatus
 import { MessageCircle, Mail, Lock, User, AlertCircle, Zap, CheckCircle } from 'lucide-react';
 import { initializeBoltAuth } from '../../config/bolt';
 import { nhost, boltConfig } from '../../config/nhost';
+import { VerificationPending } from './VerificationPending';
+import { storePendingVerificationEmail } from '../../utils/emailVerification';
 
 export function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -12,6 +14,8 @@ export function AuthForm() {
   const [useBolt, setUseBolt] = useState(boltConfig.enabled);
   const [isSuccess, setIsSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [showVerificationPending, setShowVerificationPending] = useState(false);
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState('');
 
   const { isAuthenticated, isLoading: authLoading } = useAuthenticationStatus();
 
@@ -74,6 +78,11 @@ export function AuthForm() {
     try {
       if (isSignUp) {
         if (useBolt && boltAuth) {
+          // Show verification pending immediately after signup request
+          setPendingVerificationEmail(email);
+          setShowVerificationPending(true);
+          storePendingVerificationEmail(email);
+
           // Use Bolt authentication with webhook
           const result = await signUpEmailPassword(email, password, {
             displayName: displayName || undefined,
@@ -82,7 +91,8 @@ export function AuthForm() {
           // Check if signup was successful
           if (result.error) {
             console.error('Signup failed:', result.error);
-            // The error will be displayed by the useSignUpEmailPassword hook
+            // Hide verification pending and show error
+            setShowVerificationPending(false);
             return;
           }
 
@@ -109,15 +119,7 @@ export function AuthForm() {
             }
           }
 
-          // Signup successful - show success message
           console.log('Signup successful:', result.user);
-          setIsSuccess(true);
-          setSuccessMessage('Account created successfully! Redirecting to dashboard...');
-
-          // Clear form
-          setEmail('');
-          setPassword('');
-          setDisplayName('');
 
           // Wait a moment then check if user is authenticated
           setTimeout(() => {
@@ -126,23 +128,23 @@ export function AuthForm() {
             }
           }, 1000);
         } else {
+          // Show verification pending immediately after signup request
+          setPendingVerificationEmail(email);
+          setShowVerificationPending(true);
+          storePendingVerificationEmail(email);
+
           const result = await signUpEmailPassword(email, password, {
             displayName: displayName || undefined,
           });
 
           if (result.error) {
             console.error('Signup failed:', result.error);
+            // Hide verification pending and show error
+            setShowVerificationPending(false);
             return;
           }
 
           console.log('Signup successful:', result.user);
-          setIsSuccess(true);
-          setSuccessMessage('Account created successfully! Redirecting to dashboard...');
-
-          // Clear form
-          setEmail('');
-          setPassword('');
-          setDisplayName('');
         }
       } else {
         if (useBolt && boltAuth) {
@@ -208,24 +210,19 @@ export function AuthForm() {
     }
   };
 
-  // Show success message if authentication was successful
-  if (isSuccess) {
+  // Show verification pending if signup was successful
+  if (showVerificationPending) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
-              <CheckCircle size={32} className="text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Success!</h2>
-            <p className="text-gray-600 mb-6">{successMessage}</p>
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              <span className="ml-2 text-blue-600">Redirecting...</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <VerificationPending
+        userEmail={pendingVerificationEmail}
+        onBackToSignIn={() => {
+          setShowVerificationPending(false);
+          setEmail('');
+          setPassword('');
+          setDisplayName('');
+          setPendingVerificationEmail('');
+        }}
+      />
     );
   }
 

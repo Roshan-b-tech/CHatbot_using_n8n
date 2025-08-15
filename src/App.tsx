@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import { NhostProvider, useAuthenticationStatus } from '@nhost/react';
 import { nhost } from './config/nhost';
 import { apolloClient } from './config/apollo';
 import { AuthForm } from './components/Auth/AuthForm';
+import { EmailVerification } from './components/Auth/EmailVerification';
 import Dashboard from './pages/Dashboard';
 import { refreshTokenIfNeeded } from './utils/auth';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -80,7 +81,26 @@ function AppContent() {
     );
   }
 
-  return isAuthenticated ? <Dashboard /> : <AuthForm />;
+  return (
+    <Routes>
+      <Route 
+        path="/verify-email" 
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <EmailVerification />} 
+      />
+      <Route 
+        path="/dashboard" 
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/auth" />} 
+      />
+      <Route 
+        path="/auth" 
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <AuthForm />} 
+      />
+      <Route 
+        path="/" 
+        element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/auth" />} 
+      />
+    </Routes>
+  );
 }
 
 function App() {

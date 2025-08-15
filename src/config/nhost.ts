@@ -25,6 +25,17 @@ const nhost = new NhostClient({
   autoRefreshToken: false, // Disable auto refresh to prevent errors on login form
   clientStorageType: 'localStorage',
   clientStorage: typeof window !== 'undefined' ? window.localStorage : undefined,
+  // Configure redirect URLs for email verification
+  redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/verify-email` : undefined,
+  // Email configuration for better deliverability
+  email: {
+    // Use a professional from address
+    from: import.meta.env.VITE_FROM_EMAIL || 'noreply@your-domain.com',
+    // Add reply-to header
+    replyTo: import.meta.env.VITE_REPLY_TO_EMAIL || 'support@your-domain.com',
+    // Custom subject line
+    subject: 'Verify your AI Chatbot account',
+  },
 });
 
 // Bolt configuration
