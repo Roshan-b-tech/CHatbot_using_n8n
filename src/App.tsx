@@ -13,6 +13,11 @@ import { ThemeProvider } from './contexts/ThemeContext';
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
+  // Helper function to get base URL
+  const getBaseUrl = () => {
+    return import.meta.env.VITE_APP_URL || 'https://chatbotwithn8n.netlify.app';
+  };
+
   // Debug authentication state
   useEffect(() => {
     console.log('Authentication state changed:', { isAuthenticated, isLoading });
@@ -83,21 +88,21 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route 
-        path="/verify-email" 
-        element={isAuthenticated ? <Navigate to="/dashboard" /> : <EmailVerification />} 
+      <Route
+        path="/verify-email"
+        element={isAuthenticated ? <Navigate to={`${getBaseUrl()}/dashboard`} replace /> : <EmailVerification />}
       />
-      <Route 
-        path="/dashboard" 
-        element={isAuthenticated ? <Dashboard /> : <Navigate to="/auth" />} 
+      <Route
+        path="/dashboard"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to={`${getBaseUrl()}/auth`} replace />}
       />
-      <Route 
-        path="/auth" 
-        element={isAuthenticated ? <Navigate to="/dashboard" /> : <AuthForm />} 
+      <Route
+        path="/auth"
+        element={isAuthenticated ? <Navigate to={`${getBaseUrl()}/dashboard`} replace /> : <AuthForm />}
       />
-      <Route 
-        path="/" 
-        element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/auth" />} 
+      <Route
+        path="/"
+        element={isAuthenticated ? <Navigate to={`${getBaseUrl()}/dashboard`} replace /> : <Navigate to={`${getBaseUrl()}/auth`} replace />}
       />
     </Routes>
   );
